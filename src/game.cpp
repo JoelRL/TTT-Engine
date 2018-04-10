@@ -1,9 +1,16 @@
+/*
+    game.cpp
+    Purpose: Game file
+
+    @author Joel Rodiel-Lucero
+    @version 1.0 4/3/18
+*/
+
 #include "game.h"
 #include "TextureManager.h"
 #include "GameObject.h"
 
-GameObject* player;
-GameObject* enemy;
+std::vector<GameObject*> worldObjects;
 
 SDL_Renderer* Game::renderer = nullptr;
 
@@ -15,6 +22,15 @@ Game::Game()
 Game::~Game()
 {
 	
+}
+
+void Game::newObject(int x, int y, const char* texture)
+{
+	GameObject* object;
+	
+	object = new GameObject(texture, x, y);
+	
+	worldObjects.push_back(object);
 }
 
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen)
@@ -52,10 +68,13 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		isRunning = false;
 	}
 	
-	player = new GameObject("assets/test.png", 0, 0);
+	// INITIALIZE worldObjects
 	
-	enemy = new GameObject("assets/test2.png", 0, 200);
+	newObject(100,100,"assets/test.png");
 	
+	newObject(300,250,"assets/test2.png");
+	
+	newObject(400,280,"assets/test2.png");
 }
 
 void Game::handleEvents()
@@ -84,17 +103,22 @@ void Game::handleEvents()
 
 void Game::update()
 {
-	player->Update();
-	enemy->Update();
+	// UPDATE ALL worldObjects
+	for(unsigned int i = 0; i < worldObjects.size(); i++)
+	{
+		worldObjects[i]->Update();
+	}
 }
 
 void Game::render()
 {
 	SDL_RenderClear(renderer);
 	
-	// Draw shit
-	player->Render();
-	enemy->Render();
+	// DRAW ALL worldObjects
+	for(unsigned int i = 0; i < worldObjects.size(); i++)
+	{
+		SDL_RenderCopy(Game::renderer, worldObjects[i]->objTexture, &worldObjects[i]->srcRect, &worldObjects[i]->destRect);
+	}
 	
 	SDL_RenderPresent(renderer);
 }

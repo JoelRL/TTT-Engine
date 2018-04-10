@@ -1,3 +1,11 @@
+/*
+    GameObject.cpp
+    Purpose: Object maker
+
+    @author Joel Rodiel-Lucero
+    @version 1.0 4/3/18
+*/
+
 #include "GameObject.h"
 #include "TextureManager.h"
 
@@ -25,9 +33,4 @@ void GameObject::Update()
 	destRect.y = ypos;
 	destRect.w = 458/2;
 	destRect.h = 436/2;
-}
-
-void GameObject::Render()
-{
-	SDL_RenderCopy(Game::renderer, objTexture, &srcRect, &destRect);
 }

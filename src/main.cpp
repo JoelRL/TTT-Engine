@@ -1,3 +1,11 @@
+/*
+    main.cpp
+    Purpose: Main file
+
+    @author Joel Rodiel-Lucero
+    @version 1.0 4/3/18
+*/
+
 #include "game.h"
 
 Game *game;
