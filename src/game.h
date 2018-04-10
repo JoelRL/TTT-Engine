@@ -20,11 +20,13 @@ class Game
 {
 	public:
 		
-		Game(); // Main constructor
+		Game();
+			// Main constructor
 		
-		~Game(); // Main deconstructor
+		~Game();
+			// Main deconstructor
 		
-		void init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen);
+		void init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen, unsigned int ID);
 			//init - Initialize SDL, create a window, create a renderer, and initialize objects
 			//@param title - Window title
 			//@param xpos - X position of window
@@ -32,6 +34,7 @@ class Game
 			//@param width - width of window
 			//@param height - height of window
 			//@param fullscreen - If full screen true or false
+			//@param ID - The ID for the window (e.g. ID #1 is main window, #2 is secondary)
 		
 		void handleEvents();
 			//handleEvents - Handles all events (e.g. Keyboard and mouse)
@@ -56,12 +59,16 @@ class Game
 			//@param x - X value of object
 			//@param y - Y value of object
 			//@param texture - Path to texture file
+			
+		SDL_Event gameEvent;
 		
-	private:
-	
 		bool isRunning; //Bool value that keeps track if game running
 		
 		SDL_Window *window; //Main SDL Window
+		
+	private:
+		
+		int windowID;
 };
 
 #endif // GAME_H //
