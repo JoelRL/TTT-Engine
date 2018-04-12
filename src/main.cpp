@@ -27,59 +27,9 @@ int main(int argc, char *argv[])
 		
 		game->handleEvents();
 		
-		switch(game->gameEvent.type)
-		{
-			case SDL_KEYDOWN:
-				switch(game->gameEvent.key.keysym.sym)
-				{
-					case SDLK_a:
-						if(secondScreen == false)
-						{
-							newGameWindow("Other screen", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 240, 220, false, 2);
-						}
-						break;
-					case SDLK_ESCAPE:
-						game->isRunning = false;
-						break;
-					default:
-						break;
-				}
-			default:
-				break;
-		}
-		
 		game->update();
 		
 		game->render();
-		
-		if(secondScreen)
-		{
-			
-			game2->handleEvents();
-			
-			switch(game2->gameEvent.type)
-			{
-				case SDL_KEYDOWN:
-					switch(game2->gameEvent.key.keysym.sym)
-					{
-						case SDLK_s:
-							std::cout << "snake" << std::endl;
-							break;
-						case SDLK_ESCAPE:
-							SDL_DestroyWindow(game2->window);
-							SDL_DestroyRenderer(game2->renderer);
-							break;
-						default:
-							break;
-					}
-				default:
-					break;
-			}
-			
-			game2->update();
-			
-			game2->render();
-		}
 		
 		frameTime = SDL_GetTicks() - frameStart;
 		
@@ -91,11 +41,6 @@ int main(int argc, char *argv[])
 	}
 	
 	game->clean();
-	
-	if(secondScreen)
-	{
-		game2->clean();
-	}
 	
 	return 0;
 }

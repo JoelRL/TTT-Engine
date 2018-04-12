@@ -10,9 +10,9 @@
 
 SDL_Texture* TextureManager::LoadTexture(const char* fileName)
 {
-	SDL_Surface* tempSurface = IMG_Load(fileName);
-	SDL_Texture* tex = SDL_CreateTextureFromSurface(Game::renderer, tempSurface);
-	SDL_FreeSurface(tempSurface);
+	SDL_Surface* tempSurface = IMG_Load(fileName); //Temporal surface to make texture from
+	SDL_Texture* tex = SDL_CreateTextureFromSurface(Game::renderer, tempSurface); //Create texture on temporal surface
+	SDL_FreeSurface(tempSurface); //Delete the surface
 	
-	return tex;
+	return tex; //Return texture
 }

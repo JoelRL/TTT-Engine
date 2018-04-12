@@ -99,60 +99,27 @@ void Game::handleEvents()
 	SDL_PollEvent(&event);
 	
 	gameEvent = event;
-	
-	/* if(windowID == 1)
+
+	switch (event.type)
 	{
-		switch (event.type)
-		{
-			// Keyboard handling
-			case SDL_KEYDOWN:
-				std::cout << "Event triggered in window " << windowID << std::endl;
-				switch( event.key.keysym.sym )
-				{
-					case SDLK_ESCAPE:
-						isRunning = false;
-						break;
-					default:
-						break;
-				}
-				break;
-			// Exit button handling
-			case SDL_QUIT:
-				isRunning = false;
-				break;
-			default:
-				break;
-		}
+		// Keyboard handling
+		case SDL_KEYDOWN:
+			switch( event.key.keysym.sym )
+			{
+				case SDLK_ESCAPE:
+					isRunning = false;
+					break;
+				default:
+					break;
+			}
+			break;
+		// Exit button handling
+		case SDL_QUIT:
+			isRunning = false;
+			break;
+		default:
+			break;
 	}
-	else if(windowID == 2)
-	{
-		switch (event.type)
-		{
-			// Keyboard handling
-			case SDL_KEYDOWN:
-				std::cout << "Event triggered in window " << windowID << std::endl;
-				switch( event.key.keysym.sym )
-				{
-					case SDLK_ESCAPE:
-						SDL_DestroyWindow(window);
-						SDL_DestroyRenderer(renderer);
-						break;
-					case SDLK_s:
-						std::cout << "snake";
-						break;
-					default:
-						break;
-				}
-				break;
-			// Exit button handling
-			case SDL_QUIT:
-				SDL_DestroyWindow(window);
-				SDL_DestroyRenderer(renderer);
-				break;
-			default:
-				break;
-		}
-	} */
 }
 
 void Game::update()
