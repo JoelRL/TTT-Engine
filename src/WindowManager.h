@@ -5,11 +5,22 @@
 
 Game *game;
 
+Game *game2;
+
 void newGameWindow(const char* title, int x, int y, int w, int h, bool full, int id)
 {
-	game = new Game();
+	if(id == 1)
+	{
+		game = new Game();
 	
-	game->init(title, x, y, w, h, full, id);
+		game->init(title, x, y, w, h, full, id);
+	}
+	else
+	{
+		game2 = new Game();
+	
+		game2->init(title, x, y, w, h, full, id);
+	}
 }
 
 #endif // WindowManager.h //

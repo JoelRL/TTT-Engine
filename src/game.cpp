@@ -24,17 +24,41 @@ Game::~Game()
 	
 }
 
-void Game::newObject(int x, int y, const char* texture)
+/* void changeTextColor(int r, int g, int b)
+{
+	textColor[0] = r;
+	textColor[1] = g;
+	textColor[2] = b;
+} */
+
+void Game::newObject(int x, int y, const char* texture, float scale)
+{
+	
+	GameObject* object;
+	
+	object = new GameObject(texture, x, y, scale, 1);
+	
+	worldObjects.push_back(object);
+}
+
+void Game::newTextObject(int x, int y, const char* text, float size)
 {
 	GameObject* object;
 	
-	object = new GameObject(texture, x, y);
+	int *color = getTextColor();
+	
+	std::cout << "current color: " << color[0] << "," << color[1] << "," << color[2] << std::endl;
+	
+	object = new GameObject(text, x, y, size, 2);
 	
 	worldObjects.push_back(object);
 }
 
 void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen, unsigned int ID)
 {
+	
+	TTF_Init();
+	
 	windowID = ID;
 	
 	int flags = 0;
@@ -81,15 +105,17 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	{
 		// INITIALIZE worldObjects
 		
-		newObject(100,100,"assets/test.png");
+		newObject(100,100,"assets/test.png", 0.5);
 		
-		newObject(300,250,"assets/test2.png");
+		newObject(300,250,"assets/test2.png", 0.5);
 		
-		newObject(400,280,"assets/test2.png");
-	}
-	else if(windowID == 2)
-	{
-		newObject(0,5,"assets/test.png");
+		newObject(400,280,"assets/test2.png", 0.5);
+		
+		newTextObject(0,0,"Press the arrow keys to move!", 20);
+		
+		changeColor(120,255,120);
+		
+		newTextObject(0,25,"WOW!!", 20);
 	}
 }
 
@@ -100,14 +126,35 @@ void Game::handleEvents()
 	
 	gameEvent = event;
 
+	SDL_Window* targetWindow = SDL_GetWindowFromID(event.window.windowID);
+	const char* title = SDL_GetWindowTitle(targetWindow);
+	
 	switch (event.type)
 	{
+		case SDL_WINDOWEVENT:
+			switch( event.window.event )
+			{
+				
+			}
+			break;
 		// Keyboard handling
 		case SDL_KEYDOWN:
 			switch( event.key.keysym.sym )
 			{
 				case SDLK_ESCAPE:
 					isRunning = false;
+					break;
+				case SDLK_RIGHT:
+					worldObjects[0]->move(3,0);
+					break;
+				case SDLK_LEFT:
+					worldObjects[0]->move(-3,0);
+					break;
+				case SDLK_UP:
+					worldObjects[0]->move(0,-3);
+					break;
+				case SDLK_DOWN:
+					worldObjects[0]->move(0,3);
 					break;
 				default:
 					break;
@@ -141,6 +188,8 @@ void Game::render()
 		SDL_RenderCopy(Game::renderer, worldObjects[i]->objTexture, &worldObjects[i]->srcRect, &worldObjects[i]->destRect);
 	}
 	
+	SDL_RenderCopy(Game::renderer, text1, NULL, NULL);
+	
 	SDL_RenderPresent(renderer);
 }
 
@@ -148,6 +197,7 @@ void Game::clean()
 {
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
+	TTF_Quit();
 	SDL_Quit();
 	std::cout << "Finished cleaning up" << std::endl;
 }

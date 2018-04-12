@@ -11,6 +11,7 @@
 
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
+#include "SDL2/SDL_ttf.h"
 #include <iostream>
 #include <vector>
 
@@ -54,21 +55,37 @@ class Game
 		
 		static SDL_Renderer *renderer; // Main renderer
 		
-		void newObject(int x, int y, const char* texture);
+		void newObject(int x, int y, const char* texture, float scale);
 			//newObject - Create a new object in the game
 			//@param x - X value of object
 			//@param y - Y value of object
 			//@param texture - Path to texture file
 			
+		void newTextObject(int x, int y, const char* text, float size);
+			//newTextObject - Create a new text object
+			//@param x - X value of text object
+			//@param y - Y value of text object
+			//@param text - String to print
+			
+		SDL_Texture* newText(int x, int y, const char* string);
+			
 		SDL_Event gameEvent;
 		
 		bool isRunning; //Bool value that keeps track if game running
 		
-		SDL_Window *window; //Main SDL Window
+		int* getTextColor() { return textColor; }
+		
+		void changeTextColor(int r, int g, int b);
 		
 	private:
+	
+		SDL_Window *window; //Main SDL Window
+		
+		SDL_Texture* text1; // Text
 		
 		int windowID;
+		
+		int textColor[3] = { 255, 255, 255 };
 };
 
 #endif // GAME_H //

@@ -9,12 +9,29 @@
 #include "GameObject.h"
 #include "TextureManager.h"
 
-GameObject::GameObject(const char* texturesheet, int x, int y)
+GameObject::GameObject(const char* texturesheet, int x, int y, float scale, const int type)
 {
-	objTexture = TextureManager::LoadTexture(texturesheet);
+	
+	objScale = scale;
+	
+	if(type == 1)
+	{
+		objTexture = TextureManager::LoadTexture(texturesheet);
+	}
+	else if(type == 2)
+	{
+		objTexture = TextureManager::newText(texturesheet, 255, 255, 255, scale);
+		objScale = 1;
+	}
 	
 	xpos = x;
 	ypos = y;
+}
+
+void GameObject::move(int x, int y)
+{
+	xpos = xpos + x;
+	ypos = ypos + y;
 }
 
 void GameObject::Update()
@@ -31,6 +48,6 @@ void GameObject::Update()
 	
 	destRect.x = xpos;
 	destRect.y = ypos;
-	destRect.w = 458/2;
-	destRect.h = 436/2;
+	destRect.w = w * objScale;
+	destRect.h = h * objScale;
 }

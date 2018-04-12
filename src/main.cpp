@@ -16,6 +16,8 @@ int main(int argc, char *argv[])
 	
 	newGameWindow("Game.exe", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600, false, 1);
 	
+	// newGameWindow("Second screen", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 200, 300, false, 2);
+	
 	Uint32 frameStart;
 	
 	int frameTime;
