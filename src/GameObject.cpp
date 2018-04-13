@@ -9,7 +9,7 @@
 #include "GameObject.h"
 #include "TextureManager.h"
 
-GameObject::GameObject(const char* texturesheet, int x, int y, float scale, const int type)
+GameObject::GameObject(const char* texturesheet, int x, int y, float scale, int* color, const int type)
 {
 	
 	objScale = scale;
@@ -19,8 +19,8 @@ GameObject::GameObject(const char* texturesheet, int x, int y, float scale, cons
 		objTexture = TextureManager::LoadTexture(texturesheet);
 	}
 	else if(type == 2)
-	{
-		objTexture = TextureManager::newText(texturesheet, 255, 255, 255, scale);
+	{	
+		objTexture = TextureManager::newText(texturesheet, color[0], color[1], color[2], scale);
 		objScale = 1;
 	}
 	

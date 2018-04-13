@@ -15,7 +15,7 @@ class GameObject
 {
 	public:
 	
-		GameObject(const char* texturesheet, int x, int y, float scale, const int type);
+		GameObject(const char* texturesheet, int x, int y, float scale, int* color, const int type);
 			//GameObject - main construct
 			//@param texturesheet - Path to texture file
 			//@param x - X value of object

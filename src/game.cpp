@@ -24,19 +24,21 @@ Game::~Game()
 	
 }
 
-/* void changeTextColor(int r, int g, int b)
+void Game::changeTextColor(int r, int g, int b)
 {
 	textColor[0] = r;
 	textColor[1] = g;
 	textColor[2] = b;
-} */
+}
 
 void Game::newObject(int x, int y, const char* texture, float scale)
 {
 	
+	int *color = getTextColor();
+	
 	GameObject* object;
 	
-	object = new GameObject(texture, x, y, scale, 1);
+	object = new GameObject(texture, x, y, scale, color, 1);
 	
 	worldObjects.push_back(object);
 }
@@ -47,9 +49,7 @@ void Game::newTextObject(int x, int y, const char* text, float size)
 	
 	int *color = getTextColor();
 	
-	std::cout << "current color: " << color[0] << "," << color[1] << "," << color[2] << std::endl;
-	
-	object = new GameObject(text, x, y, size, 2);
+	object = new GameObject(text, x, y, size, color, 2);
 	
 	worldObjects.push_back(object);
 }
@@ -82,14 +82,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		
 		if (renderer)
 		{
-			if(windowID == 1)
-			{
-				SDL_SetRenderDrawColor(renderer,  255, 100, 100, 255);
-			}
-			else
-			{
-				SDL_SetRenderDrawColor(renderer,  100, 100, 255, 255);
-			}
+			SDL_SetRenderDrawColor(renderer,  255, 100, 100, 255);
 			
 			std::cout << "Renderer created sucessfully" << std::endl;
 		}
@@ -113,7 +106,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		
 		newTextObject(0,0,"Press the arrow keys to move!", 20);
 		
-		changeColor(120,255,120);
+		changeTextColor(120,255,120);
 		
 		newTextObject(0,25,"WOW!!", 20);
 	}
