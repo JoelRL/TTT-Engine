@@ -24,17 +24,42 @@ Game::~Game()
 	
 }
 
-void Game::newObject(int x, int y, const char* texture)
+void Game::changeTextColor(int r, int g, int b)
 {
+	textColor[0] = r;
+	textColor[1] = g;
+	textColor[2] = b;
+}
+
+void Game::newObject(int x, int y, const char* texture, float scale)
+{
+	
+	int *color = getTextColor();
+	
 	GameObject* object;
 	
-	object = new GameObject(texture, x, y);
+	object = new GameObject(texture, x, y, scale, color, 1);
 	
 	worldObjects.push_back(object);
 }
 
-void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen)
+void Game::newTextObject(int x, int y, const char* text, float size)
 {
+	GameObject* object;
+	
+	int *color = getTextColor();
+	
+	object = new GameObject(text, x, y, size, color, 2);
+	
+	worldObjects.push_back(object);
+}
+
+void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen, unsigned int ID)
+{
+	
+	TTF_Init();
+	
+	windowID = ID;
 	
 	int flags = 0;
 	if (fullscreen)
@@ -58,6 +83,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		if (renderer)
 		{
 			SDL_SetRenderDrawColor(renderer,  255, 100, 100, 255);
+			
 			std::cout << "Renderer created sucessfully" << std::endl;
 		}
 		
@@ -68,30 +94,65 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		isRunning = false;
 	}
 	
-	// INITIALIZE worldObjects
-	
-	newObject(100,100,"assets/test.png");
-	
-	newObject(300,250,"assets/test2.png");
-	
-	newObject(400,280,"assets/test2.png");
+	if(windowID == 1)
+	{
+		// INITIALIZE worldObjects
+		
+		newObject(100,100,"assets/test.png", 0.5);
+		
+		newObject(300,250,"assets/test2.png", 0.5);
+		
+		newObject(400,280,"assets/test2.png", 0.5);
+		
+		newTextObject(0,0,"Press the arrow keys to move!", 20);
+		
+		changeTextColor(120,255,120);
+		
+		newTextObject(0,25,"WOW!!", 20);
+	}
 }
 
 void Game::handleEvents()
 {
 	SDL_Event event;
 	SDL_PollEvent(&event);
+	
+	gameEvent = event;
+
+	SDL_Window* targetWindow = SDL_GetWindowFromID(event.window.windowID);
+	const char* title = SDL_GetWindowTitle(targetWindow);
+	
 	switch (event.type)
 	{
+		case SDL_WINDOWEVENT:
+			switch( event.window.event )
+			{
+				
+			}
+			break;
 		// Keyboard handling
 		case SDL_KEYDOWN:
-			switch( event.key.keysym.sym ){
-                case SDLK_ESCAPE:
+			switch( event.key.keysym.sym )
+			{
+				case SDLK_ESCAPE:
 					isRunning = false;
+					break;
+				case SDLK_RIGHT:
+					worldObjects[0]->move(3,0);
+					break;
+				case SDLK_LEFT:
+					worldObjects[0]->move(-3,0);
+					break;
+				case SDLK_UP:
+					worldObjects[0]->move(0,-3);
+					break;
+				case SDLK_DOWN:
+					worldObjects[0]->move(0,3);
 					break;
 				default:
 					break;
 			}
+			break;
 		// Exit button handling
 		case SDL_QUIT:
 			isRunning = false;
@@ -120,6 +181,8 @@ void Game::render()
 		SDL_RenderCopy(Game::renderer, worldObjects[i]->objTexture, &worldObjects[i]->srcRect, &worldObjects[i]->destRect);
 	}
 	
+	SDL_RenderCopy(Game::renderer, text1, NULL, NULL);
+	
 	SDL_RenderPresent(renderer);
 }
 
@@ -127,6 +190,7 @@ void Game::clean()
 {
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
+	TTF_Quit();
 	SDL_Quit();
 	std::cout << "Finished cleaning up" << std::endl;
 }

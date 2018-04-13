@@ -15,7 +15,7 @@ class GameObject
 {
 	public:
 	
-		GameObject(const char* texturesheet, int x, int y);
+		GameObject(const char* texturesheet, int x, int y, float scale, int* color, const int type);
 			//GameObject - main construct
 			//@param texturesheet - Path to texture file
 			//@param x - X value of object
@@ -34,6 +34,11 @@ class GameObject
 		int getY() { return ypos; }
 			//GetY - Gets and returns Y value of object
 			//@return - Y value
+			
+		void move(int x, int y);
+			//move - Moves object corresponding to X and Y parameters
+			//@param x - X value to move
+			//@param y - Y value to move
 		
 		SDL_Texture* objTexture; // Objects SDL Texture
 		
@@ -42,6 +47,7 @@ class GameObject
 	private:
 		int xpos; // Object X position
 		int ypos; // Object Y position
+		float objScale;
 };
 
 #endif // GameObject.h //
