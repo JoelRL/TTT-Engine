@@ -7,20 +7,11 @@ Game *game;
 
 Game *game2;
 
-void newGameWindow(const char* title, int x, int y, int w, int h, bool full, int id)
+void newGameWindow(const char* title, int x, int y, int w, int h, bool full)
 {
-	if(id == 1)
-	{
-		game = new Game();
+	game = new Game();
 	
-		game->init(title, x, y, w, h, full, id);
-	}
-	else
-	{
-		game2 = new Game();
-	
-		game2->init(title, x, y, w, h, full, id);
-	}
+	game->init(title, x, y, w, h, full);
 }
 
 #endif // WindowManager.h //

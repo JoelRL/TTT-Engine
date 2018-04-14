@@ -9,10 +9,12 @@
 #include "GameObject.h"
 #include "TextureManager.h"
 
-GameObject::GameObject(const char* texturesheet, int x, int y, float scale, int* color, const int type)
+GameObject::GameObject(char* texturesheet, int x, int y, float scale, int* color, const int type)
 {
 	
+	objType = type;
 	objScale = scale;
+	objParameter = texturesheet;
 	
 	if(type == 1)
 	{
@@ -21,8 +23,9 @@ GameObject::GameObject(const char* texturesheet, int x, int y, float scale, int*
 	else if(type == 2)
 	{	
 		objTexture = TextureManager::newText(texturesheet, color[0], color[1], color[2], scale);
-		objScale = 1;
 	}
+	
+	objColor = color;
 	
 	xpos = x;
 	ypos = y;
@@ -48,6 +51,47 @@ void GameObject::Update()
 	
 	destRect.x = xpos;
 	destRect.y = ypos;
-	destRect.w = w * objScale;
-	destRect.h = h * objScale;
+	
+	if(objType == 1)
+	{
+		destRect.w = w * objScale;
+		destRect.h = h * objScale;
+	}
+	else if(objType == 2)
+	{
+		destRect.w = w;
+		destRect.h = h;
+	}
+}
+
+void GameObject::scaleTo(float scaleFactor)
+{
+	if(objType == 1){
+		objScale = scaleFactor;
+	}
+	else if(objType == 2)
+	{
+		objScale = scaleFactor;
+		objTexture = TextureManager::newText(objParameter, objColor[0], objColor[1], objColor[2], objScale);
+	}
+}
+
+void GameObject::scaleBy(float scaleFactor)
+{
+	if(objType == 1){
+		objScale = objScale * scaleFactor;
+	}
+	else if(objType == 2)
+	{
+		objScale = objScale * scaleFactor;
+		objTexture = TextureManager::newText(objParameter, objColor[0], objColor[1], objColor[2], objScale);
+	}
+}
+
+void GameObject::changeText(char* newString)
+{
+	if(objType == 2){
+		objTexture = TextureManager::newText(newString, objColor[0], objColor[1], objColor[2], objScale);
+		objParameter = newString;
+	}
 }

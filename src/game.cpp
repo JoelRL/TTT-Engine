@@ -31,7 +31,7 @@ void Game::changeTextColor(int r, int g, int b)
 	textColor[2] = b;
 }
 
-void Game::newObject(int x, int y, const char* texture, float scale)
+void Game::newObject(int x, int y, char* texture, float scale)
 {
 	
 	int *color = getTextColor();
@@ -43,7 +43,7 @@ void Game::newObject(int x, int y, const char* texture, float scale)
 	worldObjects.push_back(object);
 }
 
-void Game::newTextObject(int x, int y, const char* text, float size)
+void Game::newTextObject(int x, int y, char* text, float size)
 {
 	GameObject* object;
 	
@@ -54,12 +54,10 @@ void Game::newTextObject(int x, int y, const char* text, float size)
 	worldObjects.push_back(object);
 }
 
-void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen, unsigned int ID)
+void Game::init(const char* title, int xpos, int ypos, int width, int height, bool fullscreen)
 {
 	
 	TTF_Init();
-	
-	windowID = ID;
 	
 	int flags = 0;
 	if (fullscreen)
@@ -93,37 +91,33 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	{
 		isRunning = false;
 	}
+
+	// INITIALIZE worldObjects //
 	
-	if(windowID == 1)
-	{
-		// INITIALIZE worldObjects
-		
-		newObject(100,100,"assets/test.png", 0.5);
-		
-		newObject(300,250,"assets/test2.png", 0.5);
-		
-		newObject(400,280,"assets/test2.png", 0.5);
-		
-		newTextObject(0,0,"Press the arrow keys to move!", 20);
-		
-		changeTextColor(120,255,120);
-		
-		newTextObject(0,25,"WOW!!", 20);
-	}
+	newObject(100,100,"assets/test.png", 0.5);
+	
+	newObject(300,250,"assets/test2.png", 0.5);
+	
+	newObject(400,280,"assets/test2.png", 0.5);
+	
+	newTextObject(0,0,"Press the arrow keys to move!", 30);
+	
+	changeTextColor(120,255,120);
+	
+	newTextObject(0,35,"WOW!!", 30);
 }
 
 void Game::handleEvents()
 {
 	SDL_Event event;
 	SDL_PollEvent(&event);
-	
-	gameEvent = event;
 
 	SDL_Window* targetWindow = SDL_GetWindowFromID(event.window.windowID);
 	const char* title = SDL_GetWindowTitle(targetWindow);
 	
 	switch (event.type)
 	{
+		//Window event handling
 		case SDL_WINDOWEVENT:
 			switch( event.window.event )
 			{
@@ -148,6 +142,12 @@ void Game::handleEvents()
 					break;
 				case SDLK_DOWN:
 					worldObjects[0]->move(0,3);
+					break;
+				case SDLK_s:
+					worldObjects[0]->scaleBy(0.5);
+					break;
+				case SDLK_a:
+					worldObjects[0]->scaleTo(1);
 					break;
 				default:
 					break;
@@ -175,13 +175,11 @@ void Game::render()
 {
 	SDL_RenderClear(renderer);
 	
-	// DRAW ALL worldObjects
+	// Draw ALL worldObjects
 	for(unsigned int i = 0; i < worldObjects.size(); i++)
 	{
 		SDL_RenderCopy(Game::renderer, worldObjects[i]->objTexture, &worldObjects[i]->srcRect, &worldObjects[i]->destRect);
 	}
-	
-	SDL_RenderCopy(Game::renderer, text1, NULL, NULL);
 	
 	SDL_RenderPresent(renderer);
 }
