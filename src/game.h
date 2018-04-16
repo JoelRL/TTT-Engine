@@ -54,6 +54,8 @@ class Game
 		
 		static SDL_Renderer *renderer; // Main renderer
 		
+		static SDL_Event event; // Main event handler
+		
 		void newObject(int x, int y, char* texture, float scale);
 			//newObject - Create a new object in the game
 			//@param x - X value of object
@@ -67,15 +69,17 @@ class Game
 			//@param y - Y value of text object
 			//@param text - String to print
 			//@param size - Size of text
+			
+		void newRectangleObject(int x, int y, int w, int h, char* type);
 		
 		bool isRunning; //Bool value that keeps track if game running
 		
-		int* getTextColor() { return textColor; }
-			//getTextColor - Returns current color for text
+		int* getColor() { return gameColor; }
+			//getColor - Returns current color for text
 			//@return - Pointer of color array
 		
-		void changeTextColor(int r, int g, int b);
-			//changeTextColor - Change text color of game
+		void changeColor(int r, int g, int b);
+			//changeColor - Change text color of game
 			//@param r - Color red
 			//@param g - Color green
 			//@param b - Color blue
@@ -84,7 +88,9 @@ class Game
 	
 		SDL_Window *window; //Main SDL Window
 		
-		int textColor[3] = { 255, 255, 255 }; //Text color
+		int gameColor[3] = { 255, 255, 255 }; //Text color
+		
+		int backgroundColor[3] = { 255, 120, 120 }; //Background color
 };
 
 #endif // GAME_H //

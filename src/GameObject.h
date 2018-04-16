@@ -15,7 +15,7 @@ class GameObject
 {
 	public:
 	
-		GameObject(char* texturesheet, int x, int y, float scale, int* color, const int type);
+		GameObject(char* texturesheet, int x, int y, float scale, int* color, const int type, int w, int h);
 			//GameObject - main construct
 			//@param texturesheet - Path to texture file
 			//@param x - X value of object
@@ -27,13 +27,25 @@ class GameObject
 		void Update();
 			//Update - Update function for objects
 		
+		int getType() { return objType; }
+			//getType - Get object type
+			//@return - Number ID of type of object
+		
 		int getX() { return xpos; }
-			//GetX - Gets and returns X value of object
+			//getX - Gets and returns X value of object
 			//@return - X value
 			
 		int getY() { return ypos; }
-			//GetY - Gets and returns Y value of object
+			//getY - Gets and returns Y value of object
 			//@return - Y value
+			
+		char* getObjParameter() { return objParameter; }
+			//getObjParameter - Gets and returns the parameter for an object (e.g. Texturesheet path, string contents, rectangle draw type)
+			//@return - The object parameter
+			
+		int getObjColor(int color);
+			//getObjColor - Gets and returns color
+			//@return - The array of the objects color
 			
 		void move(int x, int y);
 			//move - Moves object corresponding to X and Y parameters
@@ -62,7 +74,11 @@ class GameObject
 		int xpos; // Object X position
 		int ypos; // Object Y position
 		float objScale; // Object sprite scale number or text size depending on type
-		int *objColor; // Color of object
+		int objColorR; // Color of object
+		int objColorG; // Color of object
+		int objColorB; // Color of object
+		int objW;
+		int objH;
 };
 
 #endif // GameObject.h //

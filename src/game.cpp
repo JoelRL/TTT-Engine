@@ -14,6 +14,8 @@ std::vector<GameObject*> worldObjects;
 
 SDL_Renderer* Game::renderer = nullptr;
 
+SDL_Event Game::event;
+
 Game::Game()
 {
 	
@@ -24,21 +26,21 @@ Game::~Game()
 	
 }
 
-void Game::changeTextColor(int r, int g, int b)
+void Game::changeColor(int r, int g, int b)
 {
-	textColor[0] = r;
-	textColor[1] = g;
-	textColor[2] = b;
+	gameColor[0] = r;
+	gameColor[1] = g;
+	gameColor[2] = b;
 }
 
 void Game::newObject(int x, int y, char* texture, float scale)
 {
 	
-	int *color = getTextColor();
+	int *color = getColor();
 	
 	GameObject* object;
 	
-	object = new GameObject(texture, x, y, scale, color, 1);
+	object = new GameObject(texture, x, y, scale, color, 1, 0, 0);
 	
 	worldObjects.push_back(object);
 }
@@ -47,9 +49,20 @@ void Game::newTextObject(int x, int y, char* text, float size)
 {
 	GameObject* object;
 	
-	int *color = getTextColor();
+	int *color = getColor();
 	
-	object = new GameObject(text, x, y, size, color, 2);
+	object = new GameObject(text, x, y, size, color, 2, 0, 0);
+	
+	worldObjects.push_back(object);
+}
+
+void Game::newRectangleObject(int x, int y, int w, int h, char* type)
+{
+	GameObject* object;
+	
+	int *color = getColor();
+	
+	object = new GameObject(type, x, y, 0, color, 3, w, h);
 	
 	worldObjects.push_back(object);
 }
@@ -80,7 +93,7 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 		
 		if (renderer)
 		{
-			SDL_SetRenderDrawColor(renderer,  255, 100, 100, 255);
+			SDL_SetRenderDrawColor(renderer,  backgroundColor[0], backgroundColor[1], backgroundColor[2], 255);
 			
 			std::cout << "Renderer created sucessfully" << std::endl;
 		}
@@ -100,16 +113,22 @@ void Game::init(const char* title, int xpos, int ypos, int width, int height, bo
 	
 	newObject(400,280,"assets/test2.png", 0.5);
 	
+	changeColor(255,0,0);
+	
 	newTextObject(0,0,"Press the arrow keys to move!", 30);
 	
-	changeTextColor(120,255,120);
+	changeColor(50,50,255);
+	
+	newRectangleObject(100,200,50,50,"fill");
+	
+	changeColor(255,255,0);
 	
 	newTextObject(0,35,"WOW!!", 30);
 }
 
 void Game::handleEvents()
 {
-	SDL_Event event;
+	
 	SDL_PollEvent(&event);
 
 	SDL_Window* targetWindow = SDL_GetWindowFromID(event.window.windowID);
@@ -117,13 +136,6 @@ void Game::handleEvents()
 	
 	switch (event.type)
 	{
-		//Window event handling
-		case SDL_WINDOWEVENT:
-			switch( event.window.event )
-			{
-				
-			}
-			break;
 		// Keyboard handling
 		case SDL_KEYDOWN:
 			switch( event.key.keysym.sym )
@@ -178,8 +190,25 @@ void Game::render()
 	// Draw ALL worldObjects
 	for(unsigned int i = 0; i < worldObjects.size(); i++)
 	{
-		SDL_RenderCopy(Game::renderer, worldObjects[i]->objTexture, &worldObjects[i]->srcRect, &worldObjects[i]->destRect);
+		if(worldObjects[i]->getType() == 1 || worldObjects[i]->getType() == 2)
+		{
+			SDL_RenderCopy(Game::renderer, worldObjects[i]->objTexture, &worldObjects[i]->srcRect, &worldObjects[i]->destRect);
+		}
+		else if(worldObjects[i]->getType() == 3)
+		{
+			
+			SDL_SetRenderDrawColor(Game::renderer, worldObjects[i]->getObjColor(1), worldObjects[i]->getObjColor(2), worldObjects[i]->getObjColor(3), 255);
+			
+			SDL_RenderDrawRect(Game::renderer, &worldObjects[i]->destRect);
+			
+			if(worldObjects[i]->getObjParameter() == "fill")
+			{
+				SDL_RenderFillRect(Game::renderer, &worldObjects[i]->destRect);
+			}
+		}
 	}
+	
+	SDL_SetRenderDrawColor(Game::renderer,  backgroundColor[0], backgroundColor[1], backgroundColor[2], 255);
 	
 	SDL_RenderPresent(renderer);
 }

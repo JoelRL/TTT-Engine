@@ -9,26 +9,46 @@
 #include "GameObject.h"
 #include "TextureManager.h"
 
-GameObject::GameObject(char* texturesheet, int x, int y, float scale, int* color, const int type)
+GameObject::GameObject(char* texturesheet, int x, int y, float scale, int* color, const int type, int w, int h)
 {
 	
 	objType = type;
-	objScale = scale;
-	objParameter = texturesheet;
 	
-	if(type == 1)
+	if(type == 1 || type == 2)
 	{
-		objTexture = TextureManager::LoadTexture(texturesheet);
+		objScale = scale;
+		objParameter = texturesheet;
+		
+		if(type == 1)
+		{
+			objTexture = TextureManager::LoadTexture(texturesheet);
+		}
+		else if(type == 2)
+		{	
+			objTexture = TextureManager::newText(texturesheet, color[0], color[1], color[2], scale);
+		}
+		
+		objColorR = color[0];
+		objColorG = color[1];
+		objColorB = color[2];
+		
+		xpos = x;
+		ypos = y;
 	}
-	else if(type == 2)
-	{	
-		objTexture = TextureManager::newText(texturesheet, color[0], color[1], color[2], scale);
+	else if(type == 3)
+	{
+	
+		objParameter = texturesheet;
+		
+		objColorR = color[0];
+		objColorG = color[1];
+		objColorB = color[2];
+		
+		xpos = x;
+		ypos = y;
+		objW = w;
+		objH = h;
 	}
-	
-	objColor = color;
-	
-	xpos = x;
-	ypos = y;
 }
 
 void GameObject::move(int x, int y)
@@ -42,7 +62,16 @@ void GameObject::Update()
 	
 	// Get texture width and height
 	int w, h;
-	SDL_QueryTexture(objTexture, NULL, NULL, &w, &h);
+	
+	if(objType == 1 || objType == 2)
+	{
+		SDL_QueryTexture(objTexture, NULL, NULL, &w, &h);
+	}
+	else if(objType == 3)
+	{
+		w = objW;
+		h = objH;
+	}
 	
 	srcRect.x = 0;
 	srcRect.y = 0;
@@ -57,10 +86,26 @@ void GameObject::Update()
 		destRect.w = w * objScale;
 		destRect.h = h * objScale;
 	}
-	else if(objType == 2)
+	else if(objType == 2 || objType == 3)
 	{
 		destRect.w = w;
 		destRect.h = h;
+	}
+}
+
+int GameObject::getObjColor(int color)
+{
+	if(color == 1)
+	{
+		return objColorR;
+	}
+	else if(color == 2)
+	{
+		return objColorG;
+	}
+	else if(color == 3)
+	{
+		return objColorB;
 	}
 }
 
@@ -72,7 +117,7 @@ void GameObject::scaleTo(float scaleFactor)
 	else if(objType == 2)
 	{
 		objScale = scaleFactor;
-		objTexture = TextureManager::newText(objParameter, objColor[0], objColor[1], objColor[2], objScale);
+		objTexture = TextureManager::newText(objParameter, objColorR, objColorG, objColorB, objScale);
 	}
 }
 
@@ -84,14 +129,14 @@ void GameObject::scaleBy(float scaleFactor)
 	else if(objType == 2)
 	{
 		objScale = objScale * scaleFactor;
-		objTexture = TextureManager::newText(objParameter, objColor[0], objColor[1], objColor[2], objScale);
+		objTexture = TextureManager::newText(objParameter, objColorR, objColorG, objColorB, objScale);
 	}
 }
 
 void GameObject::changeText(char* newString)
 {
 	if(objType == 2){
-		objTexture = TextureManager::newText(newString, objColor[0], objColor[1], objColor[2], objScale);
+		objTexture = TextureManager::newText(newString, objColorR, objColorG, objColorB, objScale);
 		objParameter = newString;
 	}
 }
